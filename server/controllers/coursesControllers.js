@@ -65,7 +65,7 @@ const updateCourses = asyncHanlder(async(req,res) =>{
 
     }
 
-    if(course.user.toString() !== user.id){
+    if(course.user.toString() !== user.id && user.role !== 'admin'){
 
         res.status(401)
         throw new Error('User not authorized')
@@ -100,7 +100,7 @@ const deleteCourses = asyncHanlder(async(req,res) =>{
 
     }
 
-    if(course.user.toString() !== user.id){
+    if(course.user.toString() !== user.id && user.role !== 'admin'){
 
         res.status(401)
         throw new Error('User not authorized')

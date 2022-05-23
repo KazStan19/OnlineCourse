@@ -114,6 +114,20 @@ const getUserData = asyncHanlder(async(req,res) =>{
 
 })
 
+// @desc get all of users data
+// @route Get /user/all
+// @access private admin only
+
+const getAllUserData = asyncHanlder(async(req,res) =>{
+
+    const users = await User.find()
+
+    res.status(200).json(users)
+
+})
+
+
+
 const genToken = (id) => {
 
     return jwt.sign({id},process.env.JWT_SECRET,{
@@ -125,5 +139,5 @@ const genToken = (id) => {
 }
 
 module.exports = {
-    registerUser,loginUser,getUserData
+    registerUser,loginUser,getUserData,getAllUserData
 }
