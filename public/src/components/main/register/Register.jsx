@@ -20,7 +20,7 @@ function Register() {
     <button className="btn w-50" onClick={switchRole}>User</button>
     <button className="btn w-50" onClick={switchRole}>Lecturer</button>
     </Row>
-    {type === false ? <UserForm/> : <LecturerForm/>}
+    {type === true ? <UserForm/> : <LecturerForm/>}
     </Container>
   )
 }

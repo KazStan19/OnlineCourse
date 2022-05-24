@@ -38,11 +38,7 @@ export const LecturerForm = () => {
     if(password === password2){
 
       userServices.registerUser(firstName,lastName, email, password,role)
-      .catch(err=>{
-        console.error(err)
-      })
       
-
     }
     else{
 
@@ -63,7 +59,7 @@ export const LecturerForm = () => {
   }
   
   return (
-    <Form>
+    <Form onSubmit={onSubmit}>
       <h1>Hello new Lecturer</h1>
       <Row className="mb-3">
         <Form.Group as={Col} controlId="formGrid2Email">
