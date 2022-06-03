@@ -21,7 +21,12 @@ const userSchema = mongoose.Schema({
     role:{
         type: String,
         required: [true,'please add a role']
-    }
+    },boughtCourses:[{
+
+        type:mongoose.Schema.Types.ObjectId,
+        ref: 'Courses'
+
+    }],
 
 },{
 

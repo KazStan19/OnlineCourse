@@ -9,10 +9,18 @@ const courseSchema = mongoose.Schema({
         ref: 'User'
 
     },
-    text:{
-        type: String,
-        required: [true,'please add a text value']
-    }
+    image:{
+        data: Buffer,
+        contentType: String
+        
+    },categorie:{
+
+        type:mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'Categorie'
+
+    },
+
 
 },{
 
