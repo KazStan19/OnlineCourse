@@ -16,6 +16,7 @@ app.use(express.urlencoded({extended:false}))
 
 app.use('/api',require('./routes/coursesRoutes'))
 app.use('/user',require('./routes/userRoutes'))
+app.use('/category',require('./routes/categoryRoutes'))
 
 app.use(errorHandler)
 

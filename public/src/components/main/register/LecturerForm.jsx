@@ -1,12 +1,10 @@
 import React, { useState } from 'react'
 import { Col, Form, Row } from 'react-bootstrap'
-import { useNavigate } from 'react-router-dom'
+
 import userServices from '../../../services/userServices'
 
 export const LecturerForm = () => {
-  
-  const goTo = useNavigate() 
-  
+
   const [userInfo, setUserInfo] = useState({
 
     firstName: '',
@@ -20,6 +18,8 @@ export const LecturerForm = () => {
 
   const {firstName,lastName, email, password, password2,role} = userInfo
   
+
+
   const onChange = (e) => {
 
     setUserInfo((prevState) => ({
@@ -50,7 +50,7 @@ export const LecturerForm = () => {
         email: '',
         password: '',
         password2: '',
-        role: 'user',
+        role: 'lecturer',
     
       })
 
@@ -58,8 +58,9 @@ export const LecturerForm = () => {
 
   }
   
+  
   return (
-    <Form onSubmit={onSubmit}>
+    <Form className='text-center' >
       <h1>Hello new Lecturer</h1>
       <Row className="mb-3">
         <Form.Group as={Col} controlId="formGrid2Email">
@@ -85,7 +86,7 @@ export const LecturerForm = () => {
         <Form.Control onChange={onChange} value={password2} name='password2' type="password" placeholder="Confirm password" />
       </Form.Group>
 
-      <button className="btn btn-primary" type="submit">
+      <button className="btn btn-primary" onClick={onSubmit}>
         Register
       </button>
     </Form>

@@ -2,16 +2,11 @@ const mongoose = require('mongoose')
 
 const categoriesSchema = mongoose.Schema({
 
-    user:{
+    name:{
 
-        type:mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: 'User'
-
-    },
-    image:{
         type: String,
-        required: [true,'please add a text value']
+        required: true,
+
     }
 },{
 
@@ -19,4 +14,4 @@ const categoriesSchema = mongoose.Schema({
 
 })
 
-module.exports = mongoose.model('Categorie',courseSchema)
+module.exports = mongoose.model('Categorie',categoriesSchema)

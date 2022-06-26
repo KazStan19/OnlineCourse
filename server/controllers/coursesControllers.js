@@ -2,15 +2,22 @@ const asyncHanlder =  require('express-async-handler')
 
 const Course = require('../model/courseModel')
 const User = require('../model/userModel')
+
 // @desc get courses
 // @route Get /api
 // @access public
 
 const getCourses = asyncHanlder(async(req,res) =>{
-    const courses = await Course.find()
-    
-    res.status(200).json(courses)
-})
+    const courses = await Course.find().populate({
+        path: 'user',
+        model: 'Users'
+    }).populate({
+        path: 'categorie',
+        model: 'Categorie'
+    }).exec(function (err, user) {
+
+    res.status(200).json(user)
+})})
 
 // @desc adds a course
 // @route Post /api
@@ -18,7 +25,11 @@ const getCourses = asyncHanlder(async(req,res) =>{
 
 const postCourses = asyncHanlder(async(req,res) =>{
 
-    if(!req.body.text){
+    const {user,categorie,desc,title,price} = req.body
+
+    console.log(req.body)
+
+    if(!user || !categorie || !desc || !title || !price){
 
         res.status(400)
         throw new Error("please add text field")
@@ -27,10 +38,15 @@ const postCourses = asyncHanlder(async(req,res) =>{
 
     const courses = await Course.create({
         
-        user: req.user.id,
-        text: req.body.text
+        user: user,
+        categorie: categorie,
+        desc:desc,
+        title:title,
+        price:price,
 
     })
+
+    
 
     res.status(200).json(courses)
 })
@@ -49,7 +65,9 @@ const updateCourses = asyncHanlder(async(req,res) =>{
 
     }
 
-    if(!req.body.text){
+    const {categorie,desc,title,price} = req.body
+
+    if(!categorie || !desc || !title || !price){
 
         res.status(400)
         throw new Error("please add text field")

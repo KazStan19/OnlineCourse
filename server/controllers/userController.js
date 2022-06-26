@@ -4,6 +4,7 @@ const asyncHanlder =  require('express-async-handler')
 const User = require('../model/userModel')
 
 
+
 // @desc register user
 // @route Post /user
 // @access public
@@ -79,6 +80,7 @@ const loginUser = asyncHanlder(async(req,res) =>{
             lastName: user.lastName,
             email: user.email,
             role: user.role,
+            boughtCourses:user.boughtCourses,
             token: genToken(user._id)
 
         })
@@ -93,12 +95,12 @@ const loginUser = asyncHanlder(async(req,res) =>{
 })
 
 // @desc get user data
-// @route Get /user/me
+// @route Get /user/
 // @access private
 
 const getUserData = asyncHanlder(async(req,res) =>{
 
-    const {_id,firstName,lastName,email,role} = await User.findById(req.user.id)
+    const {_id,firstName,lastName,email,role,boughtCourses} = await User.findById(req.user.id)
 
     
     res.status(200).json({
@@ -107,10 +109,64 @@ const getUserData = asyncHanlder(async(req,res) =>{
         firstName,
         lastName,
         email,
-        role
-
+        role,
+        boughtCourses
 
     })
+
+})
+
+// @desc add user bought course
+// @route Put /user/course
+// @access private
+
+const addUserCourse = asyncHanlder(async(req,res) =>{
+
+    const user = await User.findById(req.user.id)
+
+    if(!user){
+
+        res.status(400)
+        throw new Error('user is not found')
+
+    }
+
+    if(user.boughtCourses.includes(req.body.courseId)){
+
+        res.status(400)
+        throw new Error('Course is already bought')
+
+    }
+
+    const UserUpdated = await User.findByIdAndUpdate(req.params.id,{boughtCourses:[...user.boughtCourses,req.body.courseId]},{ new:true })
+    
+    res.status(200).json(UserUpdated.boughtCourses)
+
+})
+
+// @desc delete user bought course
+// @route put /user/course/delete
+// @access private
+
+const deleteUserCourse = asyncHanlder(async(req,res) =>{
+
+    const user = await User.findById(req.user.id)
+
+    if(!user){
+
+        res.status(400)
+        throw new Error('user is not found')
+
+    }
+
+    //console.log(user.boughtCourses)
+
+    const updatedCourseList = user.boughtCourses.filter(course => course != req.body.courseId)    
+
+    const UserUpdated = await User.findByIdAndUpdate(req.params.id,{boughtCourses:updatedCourseList},{ new:true })
+
+
+    res.status(200).json(updatedCourseList)
 
 })
 
@@ -120,10 +176,63 @@ const getUserData = asyncHanlder(async(req,res) =>{
 
 const getAllUserData = asyncHanlder(async(req,res) =>{
 
-    const users = await User.find()
+    const users = await User.find().populate({
+        path: 'boughtCourses',
+        model: 'Courses'
+    }).exec((err,user) =>{
 
-    res.status(200).json(users)
+        res.status(200).json(user)
+    })
 
+})
+
+// @desc updates a specific user
+// @route Put /user
+// @access admin
+
+const updateUser = asyncHanlder(async(req,res) =>{
+
+    const user = await User.findById(req.params.id)
+    const {firstName,lastName,email,role} = req.body
+    
+    if(!user){
+
+        res.status(400)
+        throw new Error('user is not found')
+
+    }
+
+    if(!firstName || !lastName || !email || !role){
+
+        res.status(400)
+        throw new Error("please fill in text fields")
+
+    }
+
+    const UserUpdated = await User.findByIdAndUpdate(req.params.id,req.body,{ new:true })
+
+    console.log(UserUpdated)
+
+    res.status(200).json(`updated ${User} to ${UserUpdated}`)
+})
+
+// @desc deletes a specific user
+// @route Delete /user
+// @access admin
+
+const deleteUser = asyncHanlder(async(req,res) =>{
+    const user = await User.findById(req.params.id)
+    
+    if(!user){
+
+        res.status(400)
+        throw new Error('Category is not found')
+
+    }
+
+    await user.remove()
+
+    res.status(200).json(req.params.id)
 })
 
 
@@ -139,5 +248,5 @@ const genToken = (id) => {
 }
 
 module.exports = {
-    registerUser,loginUser,getUserData,getAllUserData
+    deleteUserCourse,addUserCourse,registerUser,loginUser,getUserData,getAllUserData,updateUser,deleteUser
 }

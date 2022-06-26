@@ -2,7 +2,7 @@ const roleCheck = (permissions) =>{
 
     return (req,res,next) => {
 
-        const userRole = req.body.role
+        const userRole = req.body.userRole
 
         if(permissions.includes(userRole)){
 

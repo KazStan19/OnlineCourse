@@ -1,13 +1,13 @@
 
+
 import React, { useState } from 'react'
 import { Col,Form,Row } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
+
 import userServices from '../../../services/userServices'
 
 export const UserForm = () => {
-
-  const goTo = useNavigate() 
-  
+  const navigate = useNavigate()
   const [userInfo, setUserInfo] = useState({
 
     firstName: '',
@@ -18,6 +18,9 @@ export const UserForm = () => {
     role: 'user',
 
   })
+
+  
+
 
   const {firstName,lastName, email, password, password2,role} = userInfo
   
@@ -39,9 +42,6 @@ export const UserForm = () => {
     if(password === password2){
 
       userServices.registerUser(firstName,lastName, email, password,role)
-      .catch(err=>{
-        console.error(err)
-      })
       
 
     }
@@ -64,7 +64,7 @@ export const UserForm = () => {
   }
 
   return (
-    <Form onSubmit={onSubmit}>
+    <Form className='text-center' >
       <h1>Hello new user</h1>
       <Row className="mb-3">
         <Form.Group as={Col} controlId="formGridEmail">
@@ -90,7 +90,7 @@ export const UserForm = () => {
         <Form.Control onChange={onChange} value={password2} name='password2' type="password" placeholder="Confirm password" />
       </Form.Group>
 
-      <button className="btn btn-primary" type="submit">
+      <button className="btn btn-primary" onClick={onSubmit}>
         Register
       </button>
     </Form>
